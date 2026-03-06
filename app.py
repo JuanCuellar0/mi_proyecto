@@ -425,7 +425,7 @@ def api_delete_contacto(id):
     return {'status': 'error', 'message': str(e)}, 400
 
 
-# ============ RUTAS CRUD TABLA 3: CARACTERIZACION_PERSONAL ============
+# ============ RUTAS CRUD TABLA 3: CARACTERIZACION_PERSONAL hola============
 
 # 9. POST - INSERT
 @app.route('/api/personal', methods=['POST'])
