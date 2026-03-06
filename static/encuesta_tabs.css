@@ -1,0 +1,230 @@
+/* Estilos para formulario de caracterización con pestañas */
+
+/* Estilos generales del formulario */
+.encuesta-wrapper {
+  background-color: #ffffff;
+  color: #333;
+}
+
+.encuesta-wrapper h1 {
+  color: #0056b3;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.encuesta-wrapper h2 {
+  color: #0056b3;
+}
+
+.encuesta-wrapper h3 {
+  color: #333;
+}
+
+.encuesta-form {
+  color: #333;
+}
+
+.tabs-header {
+  display: flex;
+  gap: 5px;
+  border-bottom: 2px solid #ddd;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.tab-button {
+  padding: 12px 18px;
+  background-color: #f0f0f0;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.3s ease;
+  border-radius: 5px 5px 0 0;
+  margin-bottom: -2px;
+  white-space: nowrap;
+}
+
+.tab-button.active {
+  background-color: #007bff;
+  color: white;
+  border-bottom: 3px solid #0056b3;
+}
+
+.tab-button:hover:not(.active) {
+  background-color: #e8e8e8;
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.tab-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  color: #333;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: #e0e0e0;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #007bff;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 30px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.nav-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.nav-button.prev {
+  background-color: #6c757d;
+  color: white;
+  order: 1;
+}
+
+.nav-button.prev:hover {
+  background-color: #5a6268;
+}
+
+.nav-button.next {
+  background-color: #007bff;
+  color: white;
+  order: 3;
+}
+
+.nav-button.next:hover {
+  background-color: #0056b3;
+}
+
+.enviar-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 12px 30px;
+  font-size: 16px;
+  order: 2;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.enviar-btn:hover {
+  background-color: #218838;
+}
+
+.section-title {
+  margin-top: 0;
+  color: #0056b3;
+  font-size: 18px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.subsection-title {
+  margin-top: 25px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  border-left: 4px solid #007bff;
+  padding-left: 10px;
+}
+
+/* Estilos adicionales para labels e inputs */
+.tab-section label {
+  color: #333;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8px;
+  margin-top: 12px;
+}
+
+.tab-section input,
+.tab-section select,
+.tab-section textarea {
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  border-radius: 4px;
+}
+
+.tab-section input:focus,
+.tab-section select:focus,
+.tab-section textarea:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tab-button {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+
+  .form-buttons {
+    gap: 5px;
+  }
+
+  .nav-button,
+  .enviar-btn {
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+
+  .tabs-header {
+    gap: 3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-button {
+    padding: 10px 10px;
+    font-size: 11px;
+  }
+
+  .tab-section {
+    padding: 15px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+}

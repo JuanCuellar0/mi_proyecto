@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Mensajes de Contacto</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='paginas.css') }}">
+  <style>
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background-color: #f8f9fa; font-weight: bold; }
+    tr:hover { background-color: #f5f5f5; }
+    .mensaje-col { max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>📧 Mensajes de Contacto</h1>
+
+    <div class="top-right">
+      <form action="{{ url_for('vaciar_contactos') }}" method="post"
+            onsubmit="return confirm('¿Seguro que deseas borrar todos los mensajes?');">
+        <button type="submit">🗑 Vaciar todos los mensajes</button>
+      </form>
+    </div>
+
+    {% if filas %}
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Nombre</th>
+          <th>Correo</th>
+          <th>Mensaje</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for contacto in filas %}
+        <tr>
+          <td><strong>#{{ contacto.id }}</strong></td>
+          <td>{{ contacto.fecha or 'Sin fecha' }}</td>
+          <td>{{ contacto.nombre or 'Sin nombre' }}</td>
+          <td>{{ contacto.correo or 'Sin correo' }}</td>
+          <td class="mensaje-col" title="{{ contacto.mensaje }}">{{ contacto.mensaje or 'Sin mensaje' }}</td>
+          <td>
+            <a href="{{ url_for('editar_contacto_form', id=contacto.id) }}" style="text-decoration: none; margin-right: 8px;">
+              <button type="button" style="background-color: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">✏️ Editar</button>
+            </a>
+            <form method="POST" action="{{ url_for('eliminar_contacto', id=contacto.id) }}" style="display: inline;" onsubmit="return confirm('¿Seguro que deseas eliminar este mensaje?');">
+              <button type="submit" style="background-color: #f44336; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">🗑️ Eliminar</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; margin-top: 40px; font-size: 18px; color: #666;">
+      📭 No hay mensajes aún. <a href="/">Envía un mensaje</a> de contacto.
+    </p>
+    {% endif %}
+
+    <a href="/" class="footer-link">← Volver al inicio</a>
+  </main>
+</body>
+</html>

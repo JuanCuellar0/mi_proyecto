@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Riesgo de Deserción</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='paginas.css') }}">
+  <style>
+    .riesgo-alto { background-color: #ff6b6b; color: white; padding: 8px 12px; border-radius: 4px; font-weight: bold; }
+    .riesgo-medio { background-color: #ffd93d; color: #333; padding: 8px 12px; border-radius: 4px; font-weight: bold; }
+    .riesgo-bajo { background-color: #6bcf7f; color: white; padding: 8px 12px; border-radius: 4px; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background-color: #f8f9fa; font-weight: bold; }
+    tr:hover { background-color: #f5f5f5; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>🎯 Análisis de Riesgo de Deserción</h1>
+
+    <div class="top-right">
+      <form action="{{ url_for('vaciar_caracterizacion') }}" method="post"
+            onsubmit="return confirm('¿Seguro que deseas borrar todos los registros?');">
+        <button type="submit">🗑 Vaciar todos los registros</button>
+      </form>
+    </div>
+
+    {% if filas %}
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre Estudiante</th>
+          <th>¿Propenso a Desertar?</th>
+          <th>Puntuación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in filas %}
+        <tr>
+          <td><strong>#{{ fila.id }}</strong></td>
+          <td>{{ fila.nombre or 'Sin nombre' }}</td>
+          <td>
+            {% if fila.nivel == 'Alto' %}
+              <span class="riesgo-alto">⚠️ SÍ - ALTO RIESGO</span>
+            {% elif fila.nivel == 'Medio' %}
+              <span class="riesgo-medio">⚠️ POSIBLE - RIESGO MEDIO</span>
+            {% else %}
+              <span class="riesgo-bajo">✓ NO - BAJO RIESGO</span>
+            {% endif %}
+          </td>
+          <td>{{ fila.score }}/100</td>
+          <td>
+            <a href="{{ url_for('editar_caracterizacion_form', id=fila.id) }}" style="text-decoration: none; margin-right: 8px;">
+              <button type="button" style="background-color: #4CAF50; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">✏️ Editar</button>
+            </a>
+            <form method="POST" action="{{ url_for('eliminar_caracterizacion', id=fila.id) }}" style="display: inline;" onsubmit="return confirm('¿Seguro que deseas eliminar este registro?');">
+              <button type="submit" style="background-color: #f44336; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">🗑️ Eliminar</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; margin-top: 40px; font-size: 18px; color: #666;">
+      📊 No hay registros aún. <a href="/encuesta">Completa la encuesta</a> para ver el análisis.
+    </p>
+    {% endif %}
+
+    <a href="/" class="footer-link">← Volver al inicio</a>
+  </main>
+</body>
+</html>
+</html>

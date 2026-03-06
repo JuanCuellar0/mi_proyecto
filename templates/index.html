@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduRetention - Contra la Deserción Estudiantil</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+ 
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <h1 class="logo">EduRetention</h1>
+            <ul class="nav-links">
+                <li><a href="#problema">El Problema</a></li>
+                <li><a href="#solucion">Solución</a></li>
+                <li><a href="#contacto">Contactanos</a></li>
+                <li><a href="/encuesta">Caracterizacion</a></li>
+                <li><a href="/resultados_caracterizacion">Resultados</a></li>
+            </ul>
+        </nav>
+        <section class="hero">
+            <h2>Juntos contra la Deserción Estudiantil</h2>
+            <p>Un proyecto innovador para apoyar a estudiantes y fortalecer la retención académica con soluciones independientemente asignadas.</p>
+            <a href="" class="btn">Bienvenido</a>
+        </section>
+    </header>
+
+    <main>
+        <section id="problema" class="section">
+            <h2>El Problema de la Deserción</h2>
+            <p>La deserción universitaria es una crisis silenciosa que afecta a millones de estudiantes en todo el mundo, limitando el potencial y desarrollo de nuestras sociedades.</p>
+
+            <div class="stats">
+                <div class="card">
+                    <h3>El 13,4%</h3>
+                    <p>abandonan sus estudios prematuramente</p>
+                </div>
+                <div class="card">
+                    <h3>2.3M</h3>
+                    <p>de estudiantes cada año</p>
+                </div>
+                <div class="card">
+                    <h3>Solo el 16%</h3>
+                    <p>lde los estudiantes logran graduarse</p>
+                </div>
+            </div>
+
+            <p><strong>¿Por qué los estudiantes abandonan?</strong></p>
+            <p>Las causas incluyen factores económicos, falta de orientación vocacional, problemas emocionales y carencia de apoyo académico. Nuestro proyecto busca combatir estos factores con herramientas tecnológicas y acompañamiento humano integral.</p>
+        </section>
+
+        <section id="solucion" class="section light">
+            <h2>Nuestra Solución</h2>
+            <p>Desarrollamos una estrategia integral para abordar las múltiples causas de la deserción, combinando tecnología, mentorías y comunidad.</p>
+            <ul>
+                <li>📊 Análisis de datos para identificar estudiantes en riesgo.</li>
+                <li>🤝 Programas de mentoría académica y emocional.</li>
+                <li>💻 Plataforma digital de acompañamiento estudiantil.</li>
+            </ul>
+        </section>
+
+        <section id="contacto" class="section">
+            <h2>Contáctanos</h2>
+            <p>¿Quieres unirte al proyecto o conocer más?</p>
+            <form class="contact-form" action="{{ url_for('enviar_contacto') }}" method="POST">
+                <input type="text" name="nombre" placeholder="Nombre completo" required>
+                <input type="email" name="correo" placeholder="Correo electrónico" required>
+                <textarea name="mensaje" placeholder="Tu mensaje" required></textarea>
+                <button type="submit" class="btn">Enviar</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 EduRetention - Proyecto contra la Deserción Estudiantil</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>{% if contacto %}Editar Contacto{% else %}Nuevo Mensaje de Contacto{% endif %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='paginas.css') }}">
+  <style>
+    .form-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 30px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+    .form-group {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #333;
+    }
+    input, textarea {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    .form-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+    }
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .btn-submit {
+      background-color: #4CAF50;
+      color: white;
+      flex: 1;
+    }
+    .btn-submit:hover {
+      background-color: #45a049;
+    }
+    .btn-cancel {
+      background-color: #757575;
+      color: white;
+      flex: 1;
+    }
+    .btn-cancel:hover {
+      background-color: #616161;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="form-container">
+      <h1>{% if contacto %}✏️ Editar Mensaje de Contacto{% else %}📧 Nuevo Mensaje de Contacto{% endif %}</h1>
+      
+      {% if contacto %}
+        <form method="POST" action="{{ url_for('actualizar_contacto', id=contacto.id) }}">
+      {% else %}
+        <form method="POST" action="{{ url_for('enviar_contacto') }}">
+      {% endif %}
+        
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" name="nombre" required value="{{ contacto.nombre or '' }}">
+        </div>
+
+        <div class="form-group">
+          <label for="correo">Correo Electrónico:</label>
+          <input type="email" id="correo" name="correo" required value="{{ contacto.correo or '' }}">
+        </div>
+
+        <div class="form-group">
+          <label for="mensaje">Mensaje:</label>
+          <textarea id="mensaje" name="mensaje" required>{{ contacto.mensaje or '' }}</textarea>
+        </div>
+
+        <div class="form-buttons">
+          <button type="submit" class="btn-submit">
+            {% if contacto %}💾 Guardar Cambios{% else %}📤 Enviar Mensaje{% endif %}
+          </button>
+          <a href="{% if contacto %}{{ url_for('contactos_listado') }}{% else %}/{% endif %}" style="text-decoration: none; flex: 1;">
+            <button type="button" class="btn-cancel" style="width: 100%;">❌ Cancelar</button>
+          </a>
+        </div>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

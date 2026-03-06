@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Instrumento de caracterización</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='encuesta.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='encuesta_tabs.css') }}">
+</head>
+<body>
+  <main class="encuesta-wrapper">
+    <h1>🧾 Instrumento de caracterización de estudiantes</h1>
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 20%;"></div>
+    </div>
+
+    {% if caracterizacion %}
+      <form action="{{ url_for('actualizar_caracterizacion', id=caracterizacion.id) }}" method="POST" class="encuesta-form" id="mainForm">
+        <input type="hidden" name="id" value="{{ caracterizacion.id }}">
+    {% else %}
+      <form action="{{ url_for('enviar_caracterizacion') }}" method="POST" class="encuesta-form" id="mainForm">
+    {% endif %}
+
+      <!-- Tabs Header -->
+      <div class="tabs-header">
+        <button type="button" class="tab-button active" onclick="switchTab('tab1')">📋 Básico</button>
+        <button type="button" class="tab-button" onclick="switchTab('tab2')">📍 Ubicación</button>
+        <button type="button" class="tab-button" onclick="switchTab('tab3')">💰 Socioeconómico</button>
+        <button type="button" class="tab-button" onclick="switchTab('tab4')">🏥 Salud</button>
+        <button type="button" class="tab-button" onclick="switchTab('tab5')">👤 Final</button>
+      </div>
+
+      <!-- TAB 1: DATOS PERSONALES BÁSICOS -->
+      <div id="tab1" class="tab-content active">
+        <div class="tab-section">
+          <h2 class="section-title">📋 Datos Personales</h2>
+          
+          <label>Tipo de Documento:</label>
+          <select name="tipo_documento" class="input">
+            <option {% if caracterizacion and caracterizacion.tipo_documento == 'CEDULA DE CIUDADANIA' %}selected{% endif %}>CEDULA DE CIUDADANIA</option>
+            <option {% if caracterizacion and caracterizacion.tipo_documento == 'TARJETA DE IDENTIDAD' %}selected{% endif %}>TARJETA DE IDENTIDAD</option>
+            <option {% if caracterizacion and caracterizacion.tipo_documento == 'CEDULA DE EXTRANJERIA' %}selected{% endif %}>CEDULA DE EXTRANJERIA</option>
+            <option {% if caracterizacion and caracterizacion.tipo_documento == 'PASAPORTE' %}selected{% endif %}>PASAPORTE</option>
+          </select>
+
+          <label>Identificación:</label>
+          <input type="text" name="identificacion" class="input" value="{{ caracterizacion.identificacion or '' }}" required />
+
+          <label>Fecha de Expedición:</label>
+          <input type="date" name="fecha_expedicion" class="input" value="{{ caracterizacion.fecha_expedicion or '' }}" />
+
+          <label>Lugar de Expedición:</label>
+          <input type="text" name="lugar_expedicion" class="input" value="{{ caracterizacion.lugar_expedicion or '' }}" />
+
+          <div class="inline">
+            <div style="margin-right:12px">
+              <label>Primer Nombre:</label>
+              <input type="text" name="primer_nombre" class="input" value="{{ caracterizacion.primer_nombre or '' }}" />
+            </div>
+            <div>
+              <label>Segundo Nombre:</label>
+              <input type="text" name="segundo_nombre" class="input" value="{{ caracterizacion.segundo_nombre or '' }}" />
+            </div>
+          </div>
+
+          <div class="inline">
+            <div style="margin-right:12px">
+              <label>Primer Apellido:</label>
+              <input type="text" name="primer_apellido" class="input" value="{{ caracterizacion.primer_apellido or '' }}" />
+            </div>
+            <div>
+              <label>Segundo Apellido:</label>
+              <input type="text" name="segundo_apellido" class="input" value="{{ caracterizacion.segundo_apellido or '' }}" />
+            </div>
+          </div>
+
+          <div class="inline">
+            <div style="margin-right:12px">
+              <label>Libreta Militar:</label>
+              <select id="libreta_militar_opcion" class="input">
+                <option value="NO_TENGO">No tengo</option>
+                <option value="SI">Sí</option>
+              </select>
+            </div>
+            <div>
+              <label>Número (si aplica):</label>
+              <input type="text" id="libreta_militar_num" class="input" placeholder="Número" disabled />
+              <input type="hidden" name="libreta_militar" id="libreta_militar" />
+            </div>
+          </div>
+
+          <div class="inline">
+            <div>
+              <label>Distrito Militar:</label>
+              <input type="text" name="distrito_militar" id="distrito_militar" class="input" disabled />
+            </div>
+          </div>
+
+          <label>Fecha de nacimiento:</label>
+          <input type="date" name="fecha_nacimiento" class="input" value="{{ caracterizacion.fecha_nacimiento or '' }}" />
+
+          <div class="subsection-title">Datos de Origen</div>
+          
+          <div class="inline">
+            <div style="margin-right:12px">
+              <label>País de origen:</label>
+              <input type="text" name="pais_origen" class="input" value="{{ caracterizacion.pais_origen or '' }}" />
+            </div>
+            <div style="margin-right:12px">
+              <label>Departamento:</label>
+              <input type="text" name="departamento_origen" class="input" value="{{ caracterizacion.departamento_origen or '' }}" />
+            </div>
+            <div>
+              <label>Ciudad:</label>
+              <input type="text" name="ciudad_origen" class="input" value="{{ caracterizacion.ciudad_origen or '' }}" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: UBICACIÓN -->
+      <div id="tab2" class="tab-content">
+        <div class="tab-section">
+          <h2 class="section-title">📍 Ubicación Actual</h2>
+          
+          <div class="inline">
+            <div style="margin-right:12px">
+              <label>País:</label>
+              <input type="text" name="pais" class="input" value="{{ caracterizacion.pais or '' }}" />
+            </div>
+            <div style="margin-right:12px">
+              <label>Departamento:</label>
+              <input type="text" name="departamento" class="input" value="{{ caracterizacion.departamento or '' }}" />
+            </div>
+            <div>
+              <label>Ciudad:</label>
+              <input type="text" name="ciudad" class="input" value="{{ caracterizacion.ciudad or '' }}" />
+            </div>
+          </div>
+
+          <div class="inline">
+            <div style="margin-right:12px">
+              <label>Barrio:</label>
+              <input type="text" name="barrio" class="input" value="{{ caracterizacion.barrio or '' }}" />
+            </div>
+            <div>
+              <label>Dirección:</label>
+              <input type="text" name="direccion" class="input" value="{{ caracterizacion.direccion or '' }}" />
+            </div>
+          </div>
+
+          <div class="subsection-title">Información de Contacto</div>
+
+          <div class="inline">
+            <div style="margin-right:12px">
+              <label>Teléfono de Contacto:</label>
+              <input type="text" name="telefono_contacto" class="input" value="{{ caracterizacion.telefono_contacto or '' }}" />
+            </div>
+            <div style="margin-right:12px">
+              <label>Teléfono Celular:</label>
+              <input type="text" name="telefono_celular" class="input" value="{{ caracterizacion.telefono_celular or '' }}" />
+            </div>
+            <div>
+              <label>Correo Electrónico:</label>
+              <input type="email" name="correo_electronico" class="input" value="{{ caracterizacion.correo_electronico or '' }}" />
+            </div>
+          </div>
+
+          <label>Dirección de Envío de Correspondencia:</label>
+          <input type="text" name="direccion_correspondencia" class="input" value="{{ caracterizacion.direccion_correspondencia or '' }}" />
+        </div>
+      </div>
+
+      <!-- TAB 3: INFORMACIÓN SOCIOECONÓMICA -->
+      <div id="tab3" class="tab-content">
+        <div class="tab-section">
+          <h2 class="section-title">💰 Información Socioeconómica</h2>
+          
+          <div class="inline">
+            <div style="margin-right:12px">
+              <label>¿Tiene Sisbén?</label>
+              <select name="sisben_sn" id="sisben_sn" class="input">
+                <option {% if caracterizacion and caracterizacion.sisben_sn == 'SI' %}selected{% endif %}>SI</option>
+                <option {% if caracterizacion and caracterizacion.sisben_sn == 'NO' %}selected{% endif %}>NO</option>
+              </select>
+            </div>
+            <div>
+              <label>Grupo Sisbén VI:</label>
+              <input type="text" name="grupo_sisben" id="grupo_sisben" class="input" value="{{ caracterizacion.grupo_sisben or '' }}" />
+            </div>
+          </div>
+
+          <label>Estrato socioeconómico:</label>
+          <div class="inline">
+            <label><input type="radio" name="estrato" value="1" {% if caracterizacion and caracterizacion.estrato == '1' %}checked{% endif %}> 1</label>
+            <label><input type="radio" name="estrato" value="2" {% if caracterizacion and caracterizacion.estrato == '2' %}checked{% endif %}> 2</label>
+            <label><input type="radio" name="estrato" value="3" {% if caracterizacion and caracterizacion.estrato == '3' %}checked{% endif %}> 3</label>
+            <label><input type="radio" name="estrato" value="4" {% if caracterizacion and caracterizacion.estrato == '4' %}checked{% endif %}> 4</label>
+            <label><input type="radio" name="estrato" value="5" {% if caracterizacion and caracterizacion.estrato == '5' %}checked{% endif %}> 5</label>
+            <label><input type="radio" name="estrato" value="6" {% if caracterizacion and caracterizacion.estrato == '6' %}checked{% endif %}> 6</label>
+          </div>
+
+          <label>Acceso a internet y dispositivos para el estudio:</label>
+          <div class="inline">
+            <label><input type="radio" name="acceso" value="Internet estable y computador propio" {% if caracterizacion and caracterizacion.acceso == 'Internet estable y computador propio' %}checked{% endif %}> Internet estable</label>
+            <label><input type="radio" name="acceso" value="Solo celular" {% if caracterizacion and caracterizacion.acceso == 'Solo celular' %}checked{% endif %}> Solo celular</label>
+            <label><input type="radio" name="acceso" value="Internet limitado o compartido" {% if caracterizacion and caracterizacion.acceso == 'Internet limitado o compartido' %}checked{% endif %}> Internet limitado</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: SALUD Y CARACTERÍSTICAS ESPECIALES -->
+      <div id="tab4" class="tab-content">
+        <div class="tab-section">
+          <h2 class="section-title">🏥 Salud y Características</h2>
+          
+          <label>Tipo sanguíneo:</label>
+          <select name="tipo_sanguineo" class="input">
+            <option {% if caracterizacion and caracterizacion.tipo_sanguineo == 'A+' %}selected{% endif %}>A+</option><option {% if caracterizacion and caracterizacion.tipo_sanguineo == 'A-' %}selected{% endif %}>A-</option>
+            <option {% if caracterizacion and caracterizacion.tipo_sanguineo == 'B+' %}selected{% endif %}>B+</option><option {% if caracterizacion and caracterizacion.tipo_sanguineo == 'B-' %}selected{% endif %}>B-</option>
+            <option {% if caracterizacion and caracterizacion.tipo_sanguineo == 'AB+' %}selected{% endif %}>AB+</option><option {% if caracterizacion and caracterizacion.tipo_sanguineo == 'AB-' %}selected{% endif %}>AB-</option>
+            <option {% if caracterizacion and caracterizacion.tipo_sanguineo == 'O+' %}selected{% endif %}>O+</option><option {% if caracterizacion and caracterizacion.tipo_sanguineo == 'O-' %}selected{% endif %}>O-</option>
+          </select>
+
+          <label>EPS de afiliación:</label>
+          <input type="text" name="eps_afiliacion" class="input" value="{{ caracterizacion.eps_afiliacion or '' }}" />
+
+          <label>Otra EPS (si aplica):</label>
+          <input type="text" name="otra_eps" class="input" value="{{ caracterizacion.otra_eps or '' }}" />
+
+          <label>Estado civil:</label>
+          <select name="estado_civil" class="input">
+            <option {% if caracterizacion and caracterizacion.estado_civil == 'Soltero(a)' %}selected{% endif %}>Soltero(a)</option><option {% if caracterizacion and caracterizacion.estado_civil == 'Casado(a)' %}selected{% endif %}>Casado(a)</option>
+            <option {% if caracterizacion and caracterizacion.estado_civil == 'Unión libre' %}selected{% endif %}>Unión libre</option><option {% if caracterizacion and caracterizacion.estado_civil == 'Divorciado(a)' %}selected{% endif %}>Divorciado(a)</option><option {% if caracterizacion and caracterizacion.estado_civil == 'Viudo(a)' %}selected{% endif %}>Viudo(a)</option>
+          </select>
+
+          <div class="inline">
+            <div style="margin-right:12px">
+              <label>¿Tiene discapacidad?</label>
+              <select name="tiene_discapacidad" id="tiene_discapacidad" class="input">
+                <option {% if caracterizacion and caracterizacion.tiene_discapacidad == 'NO' %}selected{% endif %}>NO</option><option {% if caracterizacion and caracterizacion.tiene_discapacidad == 'SI' %}selected{% endif %}>SI</option>
+              </select>
+            </div>
+            <div>
+              <label>Tipo de discapacidad:</label>
+              <input type="text" name="tipo_discapacidad" id="tipo_discapacidad" class="input" value="{{ caracterizacion.tipo_discapacidad or '' }}" />
+            </div>
+          </div>
+
+          <label>Capacidad excepcional (si aplica):</label>
+          <input type="text" name="capacidad_excepcional" class="input" value="{{ caracterizacion.capacidad_excepcional or '' }}" />
+
+          <label>¿Consume alguna sustancia psicoactiva?</label>
+          <select name="consume_psicoactiva" class="input">
+            <option {% if caracterizacion and caracterizacion.consume_psicoactiva == 'NO' %}selected{% endif %}>NO</option><option {% if caracterizacion and caracterizacion.consume_psicoactiva == 'SI' %}selected{% endif %}>SI</option>
+          </select>
+
+          <label>Vulnerabilidad social/económica:</label>
+          <input type="text" name="vulnerabilidad_social" class="input" value="{{ caracterizacion.vulnerabilidad_social or '' }}" />
+
+          <label>Desvinculado de grupos armados:</label>
+          <select name="desv_grupos_armados" class="input">
+            <option {% if caracterizacion and caracterizacion.desv_grupos_armados == 'NO' %}selected{% endif %}>NO</option><option {% if caracterizacion and caracterizacion.desv_grupos_armados == 'SI' %}selected{% endif %}>SI</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- TAB 5: INFORMACIÓN FINAL / DIVERSIDAD -->
+      <div id="tab5" class="tab-content">
+        <div class="tab-section">
+          <h2 class="section-title">👤 Información Final</h2>
+          
+          <label>Edad:</label>
+          <input type="number" name="edad" class="input" min="10" max="99" value="{{ caracterizacion.edad or '' }}" />
+
+          <label>Género:</label>
+          <div class="inline">
+            <label><input type="radio" name="genero" value="Femenino" {% if caracterizacion and caracterizacion.genero == 'Femenino' %}checked{% endif %}> Femenino</label>
+            <label><input type="radio" name="genero" value="Masculino" {% if caracterizacion and caracterizacion.genero == 'Masculino' %}checked{% endif %}> Masculino</label>
+            <label><input type="radio" name="genero" value="LGBTIQ+" {% if caracterizacion and caracterizacion.genero == 'LGBTIQ+' %}checked{% endif %}> LGBTIQ+</label>
+          </div>
+
+          <div class="subsection-title">Características especiales</div>
+
+          <label>Pueblo indígena (si aplica):</label>
+          <input type="text" name="pueblo_indigena" class="input" value="{{ caracterizacion.pueblo_indigena or '' }}" />
+
+          <label>Comunidad negra/afrodescendiente (si aplica):</label>
+          <input type="text" name="comunidad_negra" class="input" value="{{ caracterizacion.comunidad_negra or '' }}" />
+
+          <label>Orientación sexual:</label>
+          <input type="text" name="orientacion_sexual" class="input" value="{{ caracterizacion.orientacion_sexual or '' }}" />
+
+          <label>¿Trabaja actualmente?</label>
+          <select name="trabaja" class="input">
+            <option {% if caracterizacion and caracterizacion.trabaja == 'NO' %}selected{% endif %}>NO</option><option {% if caracterizacion and caracterizacion.trabaja == 'SI' %}selected{% endif %}>SI</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Botones de navegación -->
+      <div class="form-buttons" id="formButtons">
+        <button type="button" class="nav-button prev" onclick="prevTab()" id="prevBtn" style="display: none;">← Anterior</button>
+        <button type="button" class="nav-button next" onclick="nextTab()" id="nextBtn">Siguiente →</button>
+        <button type="submit" class="enviar-btn" id="submitBtn" style="display: none;">✓ Enviar</button>
+      </div>
+
+    </form>
+  </main>
+
+  <script>
+    const tabs = ['tab1', 'tab2', 'tab3', 'tab4', 'tab5'];
+    let currentTabIndex = 0;
+
+    function switchTab(tabId) {
+      currentTabIndex = tabs.indexOf(tabId);
+      updateTabs();
+    }
+
+    function nextTab() {
+      if (currentTabIndex < tabs.length - 1) {
+        currentTabIndex++;
+        updateTabs();
+      } else {
+        document.getElementById('mainForm').submit();
+      }
+    }
+
+    function prevTab() {
+      if (currentTabIndex > 0) {
+        currentTabIndex--;
+        updateTabs();
+      }
+    }
+
+    function updateTabs() {
+      // Hide all tabs
+      tabs.forEach(tab => {
+        document.getElementById(tab).classList.remove('active');
+      });
+      // Show current tab
+      document.getElementById(tabs[currentTabIndex]).classList.add('active');
+
+      // Update buttons
+      document.querySelectorAll('.tab-button').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === currentTabIndex);
+      });
+
+      // Update navigation buttons
+      document.getElementById('prevBtn').style.display = currentTabIndex > 0 ? 'block' : 'none';
+      document.getElementById('nextBtn').style.display = currentTabIndex < tabs.length - 1 ? 'block' : 'none';
+      document.getElementById('submitBtn').style.display = currentTabIndex === tabs.length - 1 ? 'block' : 'none';
+
+      // Update progress bar
+      const progress = ((currentTabIndex + 1) / tabs.length) * 100;
+      document.getElementById('progressFill').style.width = progress + '%';
+
+      // Scroll to top
+      document.querySelector('.encuesta-wrapper').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Initialize
+    updateTabs();
+
+    // Libreta Militar Logic
+    (function(){
+      const sel = document.getElementById('libreta_militar_opcion');
+      const num = document.getElementById('libreta_militar_num');
+      const hidden = document.getElementById('libreta_militar');
+      const distrito = document.getElementById('distrito_militar');
+
+      function apply() {
+        const v = sel.value;
+        const isNo = v === 'NO_TENGO';
+        num.disabled = isNo;
+        distrito.disabled = isNo;
+        if (isNo) {
+          num.value = '';
+          distrito.value = '';
+          hidden.value = 'No tengo';
+        } else {
+          hidden.value = num.value ? num.value : '';
+        }
+      }
+      sel.addEventListener('change', apply);
+      num.addEventListener('input', () => {
+        if (!num.disabled) hidden.value = num.value;
+      });
+      apply();
+    })();
+
+    // Dependent Fields Logic
+    function toggleDependent(selectId, inputId, disableOnValue) {
+      const sel = document.getElementById(selectId);
+      const inp = document.getElementById(inputId);
+      if (!sel || !inp) return;
+      function apply() {
+        const v = (sel.value || '').toUpperCase();
+        const disable = v === disableOnValue.toUpperCase();
+        inp.disabled = disable;
+        if (disable) { inp.value = ''; }
+      }
+      sel.addEventListener('change', apply);
+      apply();
+    }
+    toggleDependent('sisben_sn', 'grupo_sisben', 'NO');
+    toggleDependent('tiene_discapacidad', 'tipo_discapacidad', 'NO');
+  </script>
+</body>
+</html>
